@@ -1,0 +1,28 @@
+@import "../../node_modules/nord/src//sass/nord.scss";
+
+.window {
+  background: #000;
+  border: 1px solid $nord1;
+}
+
+.title {
+  background-color: $nord3;
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.promptInput {
+  background-color: transparent;
+  font-size: 1rem;
+  border: none;
+  resize: none;
+  color: $nord13;
+  outline: none;
+  width: 100%;
+  word-break: break-all;
+  &:active {
+    border: none;
+    outline: none;
+  }
+}

@@ -1,0 +1,16 @@
+@import "../../node_modules/nord/src/sass/nord.scss";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+html{
+    font-size: 15px;
+}

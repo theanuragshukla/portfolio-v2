@@ -1,0 +1,16 @@
+
+.nav button{
+      .label{
+        max-width: 0;
+        overflow: hidden;
+        transition: 250ms;
+    }
+    &:hover{
+        div{
+            gap: 5px;
+        }
+        .label{
+            max-width: 100px;
+        }
+    }
+}
