@@ -1,9 +1,19 @@
 import { Box, Grid, GridItem } from "@chakra-ui/react";
-import React from "react";
+import React, {useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar";
 
 export default function Layout() {
+  const [isAdmin, setIsAdmin] = useState(false);
+  useEffect(() => {
+    const x = localStorage.getItem("isAdmin")
+    if(!!x){
+      const {status} = JSON.parse(x)
+      if(status===true){
+        setIsAdmin(true)
+      }
+    }
+  }, []);
   return (
     <Grid
       px={{ base: 4, md: 8 }}
@@ -14,10 +24,14 @@ export default function Layout() {
       margin="auto"
     >
       <Box mb={4}>
-        <Navbar />
+        <Navbar isAdmin={isAdmin} />
       </Box>
       <GridItem overflow="scroll">
-        <Outlet />
+        <Outlet
+          context={{
+            isAdmin,
+          }}
+        />
       </GridItem>
     </Grid>
   );

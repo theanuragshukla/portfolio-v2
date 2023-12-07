@@ -9,6 +9,7 @@ import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Blog from "./components/Blog";
 import AddBlog from "./components/AddBlog";
+import Admin from "./components/Admin";
 
 export default function Router() {
   return (
@@ -19,9 +20,11 @@ export default function Router() {
         <Route path="/skills" element={<Skills />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/links" element={<Links />} />
-        <Route path="/blogs" element={<Blogs />} />
-        <Route path="/blog" element={<Blog />} />
-        <Route path="/new-blog" element={<AddBlog />} />
+        <Route path="/blog" element={<Blogs />} />
+        <Route path="/blog/new" element={<AddBlog />} />
+        <Route path="/blog/edit/:id" element={<AddBlog edit />} />
+        <Route path="/blog/:id" element={<Blog />} />
+        <Route path="/admin" element={<Admin />} />
       </Route>
     </Routes>
   );

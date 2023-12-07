@@ -1,11 +1,131 @@
-import { Box} from "@chakra-ui/react";
-import { useState } from "react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Progress,
+  Stack,
+  useDisclosure,
+  useToast,
+} from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import {
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import renderBlog from "../common/RenderBlog";
+import { deleteOneBlog, getOneBlog } from "../data/managers/blog";
+import { MdDelete } from "react-icons/md";
+import {  Edit } from "iconsax-react";
+import { ConfirmDialog } from "./AddBlog";
 
 export default function Blog() {
-  const [data, setData] = useState(
-    "#b# #f32# #eh2# #{textDecoration(underline)}# Artifical Intelliegence #e# #!b#  #f16# Artificial intelligence is the simulation of human intelligence processes by machines, especially computer systems. Specific applications of AI include expert systems, natural language processing, speech recognition and machine vision. ;;; ;;; #eimg# #{src(https://picsum.photos/200);;m(auto);;h(300px);;backgroundSize(cover)}# #e# ;;; #b500# #f24# #eh3# How does AI Work ? #e# #!b# #f16# In general, AI systems work by ingesting large amounts of labeled training data, analyzing the data for correlations and patterns, and using these patterns to make predictions about future states. In this way, a #b# chatbot #!b# that is fed examples of text can learn to generate lifelike exchanges with people, or an image recognition  tool can learn to identify and describe objects in images by reviewing millions of examples. New, rapidly improving #ea# #{href(https://google.com);;bg(red.100);;px(1);;textDecoration(underline)}# generative AI #e#  techniques can create realistic text, images, music and other media."
-  );
+  const { id } = useParams();
+  const [blog, setBlog] = useState({});
+  const navigate = useNavigate();
+  const del = useDisclosure();
+  const toast = useToast();
+  const { isAdmin } = useOutletContext();
 
-  return <Box>{renderBlog(data)}</Box>;
+  useEffect(() => {
+    const getBlog = async () => {
+      const { status, data = {} } = await getOneBlog(id);
+      if (!!status) {
+        setBlog((prev) => ({ ...prev, ...data }));
+      } else {
+        toast({
+          status: "error",
+          title: "Invalid Blog id",
+        });
+        navigate("/blog");
+      }
+    };
+    getBlog();
+  }, []);
+
+  const deletePost = async () => {
+    try {
+      const { status, msg } = await deleteOneBlog(id);
+      if (status) {
+        toast({
+          title: "Deleted successfully",
+          status: "success",
+          isClosable: true,
+        });
+        sessionStorage.clear();
+        navigate("/blog", { replace: true });
+      } else {
+        throw new Error(msg);
+      }
+    } catch (e) {
+      toast({
+        title: "Submission error",
+        description: e.message || "Unexpected parse error",
+        status: "error",
+        isClosable: true,
+      });
+    } finally {
+      del.onClose();
+    }
+  };
+
+  const leftControls = [];
+
+  const rightControls = [
+    { name: "Delete", icon: MdDelete, onClick: del.onOpen },
+    {
+      name: "Edit",
+      icon: Edit,
+      onClick: () => {
+        navigate(`/blog/edit/${id}`);
+      },
+    },
+  ];
+
+  return (
+    <Box>
+      <ConfirmDialog
+        desc="Are you sure you want to delete ?"
+        title="Delete ?"
+        isOpen={del.isOpen}
+        onClose={del.onClose}
+        onConfirm={deletePost}
+      />
+
+      {!!blog && !!blog.body ? (
+        renderBlog(blog.body)
+      ) : (
+        <Progress isIndeterminate h={1} />
+      )}
+      {!!isAdmin && (
+        <Flex justifyContent="space-between" mb={8}>
+          <Stack direction="row" spacing={4}>
+            {leftControls.map((ctrl) => (
+              <IconButton
+                onClick={ctrl.onClick}
+                key={ctrl.name}
+                aria-label={ctrl.name}
+                icon={<ctrl.icon />}
+                isRound
+                size="lg"
+              />
+            ))}
+          </Stack>
+
+          <Stack direction="row" spacing={4}>
+            {rightControls.map((ctrl) => (
+              <IconButton
+                onClick={ctrl.onClick}
+                key={ctrl.name}
+                aria-label={ctrl.name}
+                icon={<ctrl.icon />}
+                isRound
+                size="lg"
+              />
+            ))}
+          </Stack>
+        </Flex>
+      )}
+    </Box>
+  );
 }

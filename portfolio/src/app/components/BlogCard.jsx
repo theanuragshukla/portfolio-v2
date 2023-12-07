@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Text, Badge, Image, Link, Stack } from '@chakra-ui/react';
+import { Box, Text, Badge, Image, Stack } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
-const BlogCard = ({ title, desc, tags, image, url }) => {
+const BlogCard = ({ title, desc, tags, img, uid }) => {
   return (
     <Box
     w="100%"
@@ -12,7 +13,7 @@ const BlogCard = ({ title, desc, tags, image, url }) => {
       shadow="md"
       _hover={{ shadow: 'lg' }}
     >
-    <Box h="180px" bg={`url(${image})`} bgPos="center" bgSize="cover" mb={4}/>
+    <Box h="180px" bg={`url(${img})`} bgPos="center" bgSize="cover" mb={4}/>
 
       <Text fontSize="xl" fontWeight="semibold" mb={2} noOfLines={2}>
         {title}
@@ -27,8 +28,7 @@ const BlogCard = ({ title, desc, tags, image, url }) => {
           </Badge>
         ))}
       </Stack>
-
-      <Link href={url} color="teal.500" isExternal>
+      <Link to={`/blog/${uid}`} color="teal.500">
         Read More
       </Link>
     </Box>

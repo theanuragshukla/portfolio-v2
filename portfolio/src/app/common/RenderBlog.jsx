@@ -8,6 +8,7 @@ const renderBlog = (input) => {
   let styleChanged = false;
   let Elem = getStyled("span");
 
+  const selfClosing = ["img", "hr"]
   let temp = [];
   const elems = [];
   let attrs = {};
@@ -63,7 +64,7 @@ const renderBlog = (input) => {
     } else if (part.startsWith("#e")) {
       const tag = part.substring(2, part.length - 1);
       dump(index);
-      noChild = tag === "img";
+      noChild = selfClosing.includes(tag);
       Elem = getStyled(!!tag ? tag : "span");
       styleChanged = true;
     } else if (part === ";;;") {
