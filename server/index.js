@@ -4,20 +4,35 @@ const app = express();
 const http = require("http").Server(app);
 const exec = require("child_process").exec;
 const cors = require("cors");
-const blogRouter = require('./routes/blog');
-const contactRouter = require('./routes/contactRouter')
+const blogRouter = require("./routes/blog");
+const contactRouter = require("./routes/contactRouter");
 const { getToken } = require("./utils/authHelpers");
 const cookieParser = require("cookie-parser");
 
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
 app.use(express.urlencoded());
-require('./utils/database.js')
+require("./utils/database.js");
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://theanuragshukla.github.io",
+  "https://anurags.tech",
+];
 
 app.use(
   cors({
-    origin:"http://localhost:3000",
-    credentials:true
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        var msg =
+          "The CORS policy for this site does not " +
+          "allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
   })
 );
 function execute(command, callback) {
@@ -35,7 +50,7 @@ const repoCount = (lang, cb) => {
   });
 };
 
-app.post('/getToken', getToken)
+app.post("/getToken", getToken);
 
 app.get("/lang-in-repo/:lang", (req, res) => {
   try {
@@ -51,8 +66,8 @@ app.get("/lang-in-repo/:lang", (req, res) => {
   }
 });
 
-app.use('/blog', blogRouter)
-app.use('/contact', contactRouter)
+app.use("/blog", blogRouter);
+app.use("/contact", contactRouter);
 
 http.listen(port, () => {
   console.log(`listening on port ${port}`);
