@@ -50,3 +50,7 @@ export const getAuthorized = (body) => {
 export const postMsg = (body) => {
   return reqModal(() => client.post(`/contact`, body));
 }
+
+export const getRepoCount = (lang) => {
+  return reqModal(() => client.get(`/lang-in-repo/${lang}`));
+};

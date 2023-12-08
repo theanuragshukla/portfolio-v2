@@ -9,6 +9,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { getRepoCount } from "../data/managers/blog";
 
 const SkillCard = ({ name, level, projectCount, githubLink }) => {
   const getBadgeColor = () => {
@@ -70,8 +71,7 @@ export default function Skills() {
   };
 
   const getCount = (lang) =>
-    fetch(`http://localhost:5000/lang-in-repo/${lang}`)
-      .then((res) => res.json())
+    getRepoCount(lang)
       .then((res) => res.data)
       .then((res) => (!!res ? res : null));
 
