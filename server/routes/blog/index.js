@@ -1,4 +1,4 @@
-const express = require("express");blog
+const express = require("express")
 const Blog = require("../../models/Blog");
 const blogSchema = require("../../utils/validation/blogSchema");
 const router = express.Router();
