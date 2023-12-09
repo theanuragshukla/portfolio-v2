@@ -23,4 +23,4 @@ services:
         context: ./server/
       ports:
         - ${PORT}
-
+      env_file: .env
