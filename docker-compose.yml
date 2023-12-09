@@ -3,7 +3,24 @@ services:
     client:
       container_name: 'portfolio'
       environment:
-        - REACT_APP_SERVER_URL=https://portserver.anurags.tech
+        REACT_APP_SERVER_URL: https://portserver.anurags.tech
       build:
         dockerfile: Dockerfile.prod
         context: ./portfolio/
+      ports:
+        - 3001:3000
+
+
+    server:
+      container_name: :'portserver'
+      environment:
+        PORT: ${PORT}
+        JWT_SECRET: ${JWT_SECRET}
+        ADMIN_SECRET: ${ADMIN_SECRET}
+        MONGO_URL: ${MONGO_URL}
+      build:
+        dockerfile: Dockerfile
+        context: ./server/
+      ports:
+        - ${PORT}
+

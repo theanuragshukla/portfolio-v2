@@ -1,0 +1,23 @@
+FROM node:18-alpine
+ARG PORT
+ARG MONGO_URL
+ARG JWT_SECRET
+ARG ADMIN_SECRET
+
+ENV NODE_ENV production
+ENV PORT $PORT
+ENV MONGO_URL $MONGO_URL
+ENV JWT_SECRET $JWT_SECRET
+ENV ADMIN_SECRET $ADMIN_SECRET
+
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm install --production
+
+COPY . .
+
+EXPOSE $PORT
+
+CMD ['node', 'index.js']
