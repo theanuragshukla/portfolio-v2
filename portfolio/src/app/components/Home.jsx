@@ -1,40 +1,83 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Box,
   Flex,
   Heading,
+  Link,
+  Text,
+  useColorModeValue,
+  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 
 import "../../styles/global.scss";
-import Resolver from "../../old-files/Shuffler";
+import Navbar from "./Navbar";
+import { useOutletContext } from "react-router-dom";
+
+const RespHeading = ({ children }) => {
+  return (
+    <Text lineHeight="150%" fontSize={{ base: 30, md: 36 }} fontWeight={300} >
+      {children}
+    </Text>
+  );
+};
 
 export default function Home() {
+  const { modifyNav } = useOutletContext();
+  const [isSm] = useMediaQuery('(max-width: 480px)')
+
+  useEffect(() => {
+    modifyNav((o) => ({
+      ...o,
+      noLogo: true,
+      allButtons: isSm,
+    }));
+    return () => {
+      modifyNav((o) => ({
+        ...o,
+        noLogo: false,
+        allButtons: true,
+      }));
+    };
+  }, [modifyNav, isSm]);
   return (
     <Box>
       <Flex
         flexDir={{ base: "column", md: "row" }}
         h="100%"
         align={{ base: "center" }}
-        justify="center"
-        pt={4}
+        px={{ base: 8, sm: 8, md: 24 }}
+        mt={{ base: 8, sm: 4, md: 4 }}
         gap={2}
         minH="50vh"
       >
-        <VStack align="flex-start" w="100%">
-          <Heading
-            fontSize={{ base: 24, sm: 36, md: 52 }}
-            fontWeight={{ base: 400, md: 200 }}
-          >
-            <Resolver
-              strings={["Anurag", "a web developer", "a security architect"]}
-              loop={true}
-              constant="Hii, I'm "
-              timeout={10}
-              iterations={5}
-              callback={() => {}}
-            />
-          </Heading>
+        <VStack align="flex-start" w="min(100%, 800px)">
+          <Box mb={8}>
+            <RespHeading>Hello! 👋</RespHeading>
+          </Box>
+          <RespHeading>
+            I'm{" "}
+            <Heading as="span" fontWeight={700}>
+              Anurag Shukla
+            </Heading>
+            , a competent Fullstack developer who navigates the intricacies of
+            code with confidence, architecting solutions that ensure optimal
+            system performance and a flawless user experience.
+          </RespHeading>
+
+          <Navbar noLogo colorModeSwitch={false} visible={!isSm} />
+          <Flex fontSize={{ base: 16, md: 24 }} mt={6} wrap="wrap">
+            <Text>Get in touch 👉</Text>
+            <Text
+              textUnderlineOffset={8}
+              textDecor="underline"
+              textDecorationColor="blue"
+            >
+              <Link href="mailto:www.anuragshukla@gmail.com">
+                www.anuragshukla@gmail.com
+              </Link>
+            </Text>
+          </Flex>
         </VStack>
       </Flex>
     </Box>

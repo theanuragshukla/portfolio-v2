@@ -1,17 +1,19 @@
 import {
   Badge,
   Box,
+  Button,
   Divider,
+  Flex,
   Grid,
+  GridItem,
   Heading,
+  HStack,
   Link,
-  Stack,
   Text,
-  useColorModeValue,
 } from "@chakra-ui/react";
 
 const randomColor = () => {
-  const colors = ["green", "red", "blue", "teal", "cyan", "purple"];
+  const colors = ["blue"];
   return colors[Math.floor(Math.random() * colors.length)];
 };
 
@@ -102,79 +104,103 @@ const projects = [
 
 const ProjectCard = ({ title, desc, tools, img, url, github }) => {
   return (
-    <Box
-      maxW="md"
-      borderWidth="1px"
-      borderRadius="lg"
-      overflow="hidden"
-      p={4}
-      m={4}
-      shadow="md"
-    >
-      <Text fontSize="xl" fontWeight="semibold" mb={2} noOfLines={2}>
-        {title}
-      </Text>
+    <Box w="100%" p={4}>
+      <Flex align="center" gap={2}>
+        <Text fontSize="2xl" fontWeight={400} noOfLines={2}>
+          {title}
+        </Text>
+      </Flex>
 
-      <Text noOfLines={2} mb={4}>
-        {desc}
-      </Text>
+      <Text lineHeight="150%">{desc}</Text>
 
-      <Stack direction="row" spacing={1} mb={4} wrap="wrap">
+      <HStack spacing={4} wrap="wrap" my={2}>
+        <Button
+          colorScheme="blue"
+          variant="link"
+          size="md"
+          pl={0}
+          as={Link}
+          target="_blank"
+          href={github}
+          fontWeight={1000}
+        >
+          Github{" "}
+        </Button>
+        <Button
+          colorScheme="blue"
+          variant="link"
+          fontWeight={1000}
+          size="md"
+          as={Link}
+          target="_blank"
+          href={url}
+        >
+          Live
+        </Button>
+      </HStack>
+
+      <HStack spacing={2} wrap="wrap">
         {tools.map((tool, index) => (
           <Badge
             key={index}
-            borderRadius="full"
+            borderRadius="md"
             px="2"
+            py={1}
+            variant="outline"
             colorScheme={randomColor()}
           >
             {tool}
           </Badge>
         ))}
-      </Stack>
-
-      <Link href={url} color="teal.500" isExternal>
-        View Project
-      </Link>
-
-      <Text mt={2}>
-        <Link href={github} color="gray.500" isExternal>
-          GitHub Repository
-        </Link>
-      </Text>
+      </HStack>
+      <Divider mt={4} />
     </Box>
   );
 };
 
-export default function Projects() {
-  const dividerColor = useColorModeValue("gray", "blue.200");
+const Archive = () => {
   return (
-    <Box>
-      <Heading
-        fontSize={28}
-        textDecoration="underline"
-        textUnderlineOffset={8}
-        textTransform="capitalize"
-        mb={4}
-      >
-        Projects
+    <Box >
+      <Heading mx={4} fontSize={32} fontWeight={400} mb={4} >
+        Archive
       </Heading>
       <Grid
-        gap="4"
         width="100%"
         overflow="scroll"
         templateColumns={{
           base: "1fr",
-          sm: "1fr 1fr",
-          md: "1fr 1fr 1fr",
-          lg: "repeat(4, 1fr)",
         }}
-        mb={8}
       >
         {projects.map((obj) => (
           <ProjectCard {...obj} />
         ))}
       </Grid>
-      <Divider height="2px" bg={dividerColor} />
     </Box>
+  );
+};
+
+export default function Projects() {
+  return (
+    <Grid templateColumns={{base:"1fr", lg:"1fr min(40%, 400px)"}} maxH="100vh" overflowY="hidden">
+    <GridItem maxH="100%" overflowY="scroll">
+      <Heading mx={4} fontSize={32} fontWeight={400} mb={4}>
+        Projects
+      </Heading>
+      <Grid
+        width="100%"
+        overflow="scroll"
+        templateColumns={{
+          base: "1fr",
+        }}
+      >
+        {projects.map((obj) => (
+          <ProjectCard {...obj} />
+        ))}
+      </Grid>
+    </GridItem>
+    <GridItem maxH="100%" overflowY="scroll">
+    <Archive />
+    </GridItem>
+    </Grid>
   );
 }

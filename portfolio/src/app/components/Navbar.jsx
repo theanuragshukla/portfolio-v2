@@ -11,6 +11,7 @@ import {
   Show,
   Hide,
   useDisclosure,
+  Spacer,
 } from "@chakra-ui/react";
 import { HiTerminal } from "react-icons/hi";
 import {
@@ -33,7 +34,15 @@ import "../../styles/nav.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../common/Buttons";
 
-export default function Navbar({ isAdmin }) {
+export default function Navbar({
+  isAdmin = false,
+  noLogo = false,
+  colorModeSwitch = true,
+  allButtons = true,
+  visible=true
+}) {
+
+
   const { colorMode, toggleColorMode } = useColorMode();
   const [isMd] = useMediaQuery("(max-width: 768px)");
   const ham = useDisclosure();
@@ -100,14 +109,16 @@ export default function Navbar({ isAdmin }) {
       Icon: SearchNormal,
     },
     ...(isAdmin
-      ? [{
-          title: "New Blog",
-          onClick: () => {
-            ham.onClose();
-            navigate("/blog/new");
+      ? [
+          {
+            title: "New Blog",
+            onClick: () => {
+              ham.onClose();
+              navigate("/blog/new");
+            },
+            Icon: AddCircle,
           },
-          Icon: AddCircle,
-        }]
+        ]
       : []),
   ];
 
@@ -122,13 +133,8 @@ export default function Navbar({ isAdmin }) {
     setButtons(() => [...controls]);
   }, [location.pathname, isAdmin]);
 
-  useEffect(() => {
-    window.addEventListener("scroll", (e) => {});
-    return () => window.removeEventListener("scroll");
-  }, []);
-
   return (
-    <>
+   !!visible ? <>
       <Flex
         h="60px"
         align="center"
@@ -137,40 +143,50 @@ export default function Navbar({ isAdmin }) {
         gap={{ base: 2, sm: 0 }}
         pos="relative"
       >
-        <Flex
-          gap={0}
-          justify="center"
-          align="center"
-          onClick={() => navigate("/")}
-          cursor="pointer"
-        >
-          {isMd ? (
-            <Icon
-              boxSize={12}
-              as={Logo}
-              color={colorMode === "light" ? "black" : "white"}
-            />
-          ) : (
-            <HiTerminal size={36} />
-          )}
-          <Heading fontSize={26}>
-            {isMd
-              ? "nurag"
-              : `/home/anurag${location.pathname.split("/", 2).join("/")}`}
-          </Heading>
-        </Flex>
+        {!!noLogo ? (
+          <Spacer />
+        ) : (
+          <Flex
+            gap={0}
+            justify="center"
+            align="center"
+            onClick={() => navigate("/")}
+            cursor="pointer"
+          >
+            {isMd ? (
+              <Icon
+                boxSize={12}
+                as={Logo}
+                color={colorMode === "light" ? "black" : "white"}
+              />
+            ) : (
+              <HiTerminal size={36} />
+            )}
+            <Heading fontSize={26} fontFamily="Inter">
+              {isMd
+                ? "nurag"
+                : `/home/anurag${location.pathname.split("/", 2).join("/")}`}
+            </Heading>
+          </Flex>
+        )}
         <Flex gap={2} justify="center" align="center">
-          <Show above="sm">
-            <Buttons buttons={buttons} />
-          </Show>
-          <IconButton onClick={toggleColorMode} isRound>
-            {colorMode === "light" ? <Moon /> : <Sun1 />}
-          </IconButton>
-          <Hide above="sm">
-            <IconButton onClick={ham.onToggle} isRound>
-              {ham.isOpen ? <CloseCircle /> : <HambergerMenu />}
+          {!!allButtons && (
+            <Show above="sm">
+              <Buttons buttons={buttons} />
+            </Show>
+          )}
+          {!!colorModeSwitch && (
+            <IconButton onClick={toggleColorMode} isRound>
+              {colorMode === "light" ? <Moon /> : <Sun1 />}
             </IconButton>
-          </Hide>
+          )}
+          {!!allButtons && (
+            <Hide above="sm">
+              <IconButton onClick={ham.onToggle} isRound>
+                {ham.isOpen ? <CloseCircle /> : <HambergerMenu />}
+              </IconButton>
+            </Hide>
+          )}
         </Flex>
       </Flex>
       <Flex flexDir="column" pt={4}>
@@ -215,6 +231,6 @@ export default function Navbar({ isAdmin }) {
           </AnimatePresence>
         </Show>
       </Flex>
-    </>
+    </> : <></>
   );
 }
