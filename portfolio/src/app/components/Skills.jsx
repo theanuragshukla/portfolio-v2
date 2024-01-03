@@ -10,27 +10,31 @@ import {
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getRepoCount } from "../data/managers/blog";
+import { CustomBar } from "./Navbar";
+import { FaJava, FaLinux, FaReact } from "react-icons/fa";
+import { SiGnubash, SiKalilinux, SiPostgresql } from "react-icons/si";
 
 const getGithubSearchUrl = (lang, user = "theanuragshukla") =>
   `https://github.com/search?q=org%3A${user}++language%3A${lang}+&type=repositories`;
+
 const TYPES = {
   PLANG: "Programming language",
-  TOOL: "tool",
-  FRAMEWORK: "framework",
-  DBS: "library",
   SLANG: "Scripting",
+  DBS: "library",
+  FRAMEWORK: "framework",
+  TOOL: "tool",
   SEC: "Security",
 };
 
 const TypeDict = {
   [TYPES.PLANG]: "Languages",
   [TYPES.SLANG]: "Scripting",
-  [TYPES.SEC]: "Security",
-  [TYPES.TOOL]: "Tools",
   [TYPES.DBS]: "Databases",
   [TYPES.FRAMEWORK]: "Frameworks",
+  [TYPES.TOOL]: "Tools",
+  [TYPES.SEC]: "Security",
 };
 const LEVEL = {
   0: "Familier",
@@ -78,8 +82,16 @@ const skills = {
     { name: "Nginx", level: LEVEL[2] },
     { name: "Azure", level: LEVEL[2] },
   ],
-  [TYPES.SEC]: [
-  ],
+  [TYPES.SEC]: [],
+};
+
+const Icons = {
+  [TYPES.PLANG]: FaJava,
+  [TYPES.SLANG]: SiGnubash,
+  [TYPES.DBS]: SiPostgresql,
+  [TYPES.FRAMEWORK]: FaReact,
+  [TYPES.TOOL]: FaLinux,
+  [TYPES.SEC]: SiKalilinux,
 };
 
 const SkillCard = ({ name, level, projectCount, githubLink }) => {
@@ -125,6 +137,8 @@ export default function Skills() {
       .then((res) => (!!res ? res : null));
 
   const [data, setData] = useState({});
+  const elemRefs = useRef([]);
+  const [idx, setIdx] = useState(0);
 
   useEffect(() => {
     async function fetchData(lang) {
@@ -154,12 +168,17 @@ export default function Skills() {
   const GroupCategories = (categories) => {
     return (
       <Box>
-        {categories.map(([k, v]) => {
+        {categories.map(([k, v], i) => {
           if (v.length === 0) return "";
           return (
             <Box px={4}>
               {!k.startsWith("--") && (
-                <Heading fontSize={28} mb={4} fontWeight={500}>
+                <Heading
+                  fontSize={28}
+                  mb={4}
+                  fontWeight={500}
+                  ref={(elem) => (elemRefs[i] = elem)}
+                >
                   {TypeDict[k]}
                 </Heading>
               )}
@@ -170,8 +189,9 @@ export default function Skills() {
                     level={level}
                     projectCount={data[name] || 0}
                     githubLink={
-                      k.replaceAll("--","" )
-                       === TYPES.PLANG ? getGithubSearchUrl(name) : null
+                      k.replaceAll("--", "") === TYPES.PLANG
+                        ? getGithubSearchUrl(name)
+                        : null
                     }
                   />
                 ))}
@@ -184,25 +204,67 @@ export default function Skills() {
     );
   };
 
-  const [isSm, isLg] = useMediaQuery([
-    "(min-width: 480px)",
-    "(max-width: 992px)",
-  ]);
+  const handleClick = (i) => {
+    setIdx(i);
+  };
+
+  const [btns, setBtns] = useState([]);
+  useEffect(() => {
+    const obj = [];
+    Object.entries(TypeDict).forEach(([k, v], i) => {
+      if (v.length === 0) return;
+      obj.push({
+        title: v,
+        onClick: () => {
+          handleClick(i);
+        },
+        Icon: Icons[k],
+      });
+    });
+    setBtns(obj);
+  }, [TypeDict]);
 
   return (
     <Grid
       gap={10}
       width="100%"
-      overflow="scroll"
-      templateColumns={{
-        base: "1fr",
-        sm: "1fr 1fr",
-        md: "repeat(3, 1fr)",
+      templateRows={{
+        base: "auto 1fr",
       }}
+      overflowX="hidden"
     >
-      {chunkArrayInGroups(Object.entries(skills), isSm && isLg ? 2 : 2).map(
-        (arr) => GroupCategories(arr)
-      )}
+      <Flex w="100%" justify="center">
+        <CustomBar buttons={btns} />
+      </Flex>
+      <Flex justify="center">
+        {Object.entries(skills).map(([k, v], i) => {
+          if (i !== idx) return "";
+          return (
+            <VStack gap={0} w="100%" maxW={500}>
+              <Heading
+                fontSize={28}
+                mb={4}
+                fontWeight={500}
+                ref={(elem) => (elemRefs[i] = elem)}
+              >
+                {TypeDict[k]}
+              </Heading>
+              {v.map(({ name, level }) => (
+                <SkillCard
+                  name={name}
+                  level={level}
+                  projectCount={data[name] || 0}
+                  githubLink={
+                    k.replaceAll("--", "") === TYPES.PLANG
+                      ? getGithubSearchUrl(name)
+                      : null
+                  }
+                />
+              ))}
+            </VStack>
+          );
+        })}
+      </Flex>
     </Grid>
   );
 }
