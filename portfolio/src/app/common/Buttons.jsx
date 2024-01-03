@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Button, Box, Flex } from "@chakra-ui/react";
+import { Button, Box, Flex, useMediaQuery } from "@chakra-ui/react";
+import hoverSound from "../../assets/click.mp3";
 
 const Buttons = ({ buttons }) => {
+  const [isSm] = useMediaQuery(["(min-width: 480px)"]);
+  const audio = useMemo(() => new Audio(hoverSound), []);
+  audio.muted = true;
+  const handleHover = () => {
+    try {
+      audio.currentTime = 0;
+      audio.playbackRate = 2;
+      audio.play();
+    } catch (e) {
+    } finally {
+      audio.muted = false;
+    }
+  };
+
   return (
     <AnimatePresence>
       {buttons.map((btn, index) => {
@@ -33,16 +48,17 @@ const Buttons = ({ buttons }) => {
               height: 0,
             }}
             onClick={btn.onClick}
+            onHoverStart={btn.onHover || handleHover}
           >
             <Button
               p={0}
-              _hover={{ padding: 4 }}
+              _hover={isSm && { padding: 4 }}
               borderRadius="200vmax"
               w="100%"
             >
               <Flex justify="flex-start" align="center">
                 {<btn.Icon size={24} />}
-                <Box className="label">{btn.title}</Box>
+                <Box className="label">{isSm && btn.title}</Box>
               </Flex>
             </Button>
           </motion.div>

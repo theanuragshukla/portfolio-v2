@@ -34,15 +34,32 @@ import "../../styles/nav.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../common/Buttons";
 
+export const CustomBar = ({buttons}) => {
+  return !!buttons ? (
+    <>
+      <Flex
+        h="60px"
+        align="center"
+        className="nav"
+        justify="space-between"
+        gap={{ base: 2, sm: 0 }}
+        pos="relative"
+      >
+        <Flex gap={2} justify="center" align="center">
+          <Buttons buttons={buttons} />
+        </Flex>
+      </Flex>
+    </>
+  ) : ""
+};
+
 export default function Navbar({
   isAdmin = false,
   noLogo = false,
   colorModeSwitch = true,
   allButtons = true,
-  visible=true
+  visible = true,
 }) {
-
-
   const { colorMode, toggleColorMode } = useColorMode();
   const [isMd] = useMediaQuery("(max-width: 768px)");
   const ham = useDisclosure();
@@ -133,8 +150,8 @@ export default function Navbar({
     setButtons(() => [...controls]);
   }, [location.pathname, isAdmin]);
 
-  return (
-   !!visible ? <>
+  return !!visible ? (
+    <>
       <Flex
         h="60px"
         align="center"
@@ -231,6 +248,8 @@ export default function Navbar({
           </AnimatePresence>
         </Show>
       </Flex>
-    </> : <></>
+    </>
+  ) : (
+    <></>
   );
 }

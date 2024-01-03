@@ -11,6 +11,7 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 const randomColor = () => {
   const colors = ["blue"];
@@ -159,9 +160,10 @@ const ProjectCard = ({ title, desc, tools, img, url, github }) => {
 };
 
 const Archive = () => {
+  const [archive, setArchive] = useState([]);
   return (
-    <Box >
-      <Heading mx={4} fontSize={32} fontWeight={400} mb={4} >
+    <Box>
+      <Heading mx={4} fontSize={32} fontWeight={400} mb={4}>
         Archive
       </Heading>
       <Grid
@@ -171,9 +173,14 @@ const Archive = () => {
           base: "1fr",
         }}
       >
-        {projects.map((obj) => (
+        {!!archive && archive.length>0 ? archive.map((obj) => (
           <ProjectCard {...obj} />
-        ))}
+        )) : (
+          <Text fontSize="lg" fontWeight={400} mx={4}>
+            Nothing to show here
+          </Text>
+        )
+        }
       </Grid>
     </Box>
   );
@@ -181,26 +188,22 @@ const Archive = () => {
 
 export default function Projects() {
   return (
-    <Grid templateColumns={{base:"1fr", lg:"1fr min(40%, 400px)"}} maxH="100vh" overflowY="hidden">
-    <GridItem maxH="100%" overflowY="scroll">
-      <Heading mx={4} fontSize={32} fontWeight={400} mb={4}>
-        Projects
-      </Heading>
-      <Grid
-        width="100%"
-        overflow="scroll"
-        templateColumns={{
-          base: "1fr",
-        }}
-      >
+    <Grid
+      templateColumns={{ base: "1fr", lg: "1fr min(40%, 400px)" }}
+      h={{ base: "auto", md: "calc(100vh - 100px)" }}
+      overflowY="hidden"
+    >
+      <GridItem overflowY="scroll" h="100%">
+        <Heading mx={4} fontSize={32} fontWeight={400} mb={4}>
+          Projects
+        </Heading>
         {projects.map((obj) => (
           <ProjectCard {...obj} />
         ))}
-      </Grid>
-    </GridItem>
-    <GridItem maxH="100%" overflowY="scroll">
-    <Archive />
-    </GridItem>
+      </GridItem>
+      <GridItem maxH="100%" overflowY="scroll">
+        <Archive />
+      </GridItem>
     </Grid>
   );
 }

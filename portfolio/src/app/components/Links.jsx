@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
@@ -9,32 +9,44 @@ import {
   Link,
   Stack,
   useToast,
+  HStack,
+  Heading,
+  Checkbox,
 } from "@chakra-ui/react";
-import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from "react-icons/fa";
+import {
+  FaGithub,
+  FaLinkedin,
+  FaTwitter,
+  FaEnvelope,
+  FaAlignRight,
+} from "react-icons/fa";
 import { useFormik } from "formik";
 import messageSchema from "../utils/schemas/messageSchema";
 import { postMsg } from "../data/managers/blog";
+import { CustomBar } from "./Navbar";
+import { CiLinkedin, CiMail, CiTwitter } from "react-icons/ci";
 
 const socialMediaProfiles = [
   {
     title: "GitHub",
-    link: "https://github.com/theanuragshukla",
-    icon: FaGithub,
+    onClick: () => window.open("https://github.com/theanuragshukla", "_blank"),
+    Icon: FaGithub,
   },
   {
     title: "LinkedIn",
-    link: "https://linkedin.com/in/therealanuragshukla",
-    icon: FaLinkedin,
+    onClick: () =>
+      window.open("https://linkedin.com/in/therealanuragshukla", "_blank"),
+    Icon: CiLinkedin,
   },
   {
     title: "Twitter",
-    link: "https://twitter.com/itsanuragshukla",
-    icon: FaTwitter,
+    onClick: () => window.open("https://twitter.com/itsanuragshukla", "_blank"),
+    Icon: CiTwitter,
   },
   {
     title: "Email",
-    link: "mailto:www.anuragshukla@gmail.com",
-    icon: FaEnvelope,
+    onClick: () => window.open("mailto:www.anuragshukla@gmail.com", "_blank"),
+    Icon: CiMail,
   },
 ];
 
@@ -94,32 +106,50 @@ const ContactSection = () => {
         isClosable: true,
       });
   }, [mFormik.isValidating]);
+  const [official, setOfficial] = useState(true);
+  const messageRef = React.useRef(null);
+
+  const handleOfficial = () => {
+    setOfficial((prev) => {
+      if (prev) {
+        mFormik.setFieldValue("email", "unofficial@anurags.tech");
+        mFormik.setFieldValue("name", "Stranger");
+        messageRef.current.focus();
+      } else {
+        mFormik.setFieldValue("email", "");
+        mFormik.setFieldValue("name", "");
+      }
+      return !prev;
+    });
+  };
 
   return (
     <Box p={8}>
-      <Flex justifyContent="center" mb={8}>
-        <Stack direction="row" spacing={4}>
-          {socialMediaProfiles.map((profile) => (
-            <IconButton
-              key={profile.name}
-              as={Link}
-              href={profile.link}
-              aria-label={profile.name}
-              icon={<profile.icon />}
-              isRound
-              size="lg"
-              target="_blank"
-            />
-          ))}
-        </Stack>
+      <Flex justify="center" align="center" mb={8}>
+        <CustomBar buttons={socialMediaProfiles} />
       </Flex>
-
       <Box maxW="md" mx="auto">
         <Stack spacing={4}>
+          <Heading textAlign="center" fontSize="2xl" fontWeight={400} mb={4}>
+            Contact Me
+          </Heading>
+          <HStack spacing={4} justify="center" align="center">
+            <Checkbox
+              onChange={handleOfficial}
+              isChecked={official}
+              colorScheme="green"
+              size="lg"
+            />{" "}
+            <Heading fontSize="md" fontWeight={400}>
+              {" "}
+              Contact officially
+            </Heading>
+          </HStack>
           <Input
             name="name"
-            placeholder="Your Name"
+            placeholder="Name"
             size="md"
+            readOnly={!official}
             borderRadius="md"
             value={mFormik.values.name}
             onChange={mFormik.handleChange}
@@ -127,26 +157,24 @@ const ContactSection = () => {
           <Input
             type="email"
             name="email"
-            placeholder="Your Email"
+            placeholder="Email"
             size="md"
             borderRadius="md"
+            readOnly={!official}
             value={mFormik.values.email}
             onChange={mFormik.handleChange}
           />
           <Textarea
             name="msg"
-            placeholder="Your Message"
+            placeholder={official ? "Message" : "What's up?"}
             size="md"
             borderRadius="md"
             value={mFormik.values.msg}
             onChange={mFormik.handleChange}
+    ref={messageRef}
           />
 
-          <Button
-            onClick={mFormik.handleSubmit}
-            colorScheme="green"
-            size="md"
-          >
+          <Button onClick={mFormik.handleSubmit} colorScheme="green" size="md">
             Send Message
           </Button>
         </Stack>
