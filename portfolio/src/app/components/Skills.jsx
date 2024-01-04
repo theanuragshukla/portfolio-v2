@@ -4,17 +4,63 @@ import {
   Divider,
   Flex,
   Grid,
+  GridItem,
   Heading,
+  HStack,
   Link,
   Text,
-  useMediaQuery,
   VStack,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { getRepoCount } from "../data/managers/blog";
 import { CustomBar } from "./Navbar";
-import { FaJava, FaLinux, FaReact } from "react-icons/fa";
-import { SiGnubash, SiKalilinux, SiPostgresql } from "react-icons/si";
+import {
+  FaDotCircle,
+  FaHardHat,
+  FaJava,
+  FaLinux,
+  FaReact,
+} from "react-icons/fa";
+import {
+  SiAzuredevops,
+  SiC,
+  SiCplusplus,
+  SiDjango,
+  SiDocker,
+  SiExpress,
+  SiFirewalla,
+  SiFlask,
+  SiGit,
+  SiGnubash,
+  SiGo,
+  SiGoogleappsscript,
+  SiIpfs,
+  SiJavascript,
+  SiKalilinux,
+  SiLinux,
+  SiLua,
+  SiMarkdown,
+  SiMicrosoftazure,
+  SiMongodb,
+  SiMysql,
+  SiNestjs,
+  SiNextdotjs,
+  SiNginx,
+  SiNgrok,
+  SiNodedotjs,
+  SiPhp,
+  SiPostgresql,
+  SiPython,
+  SiReact,
+  SiRedis,
+  SiRust,
+  SiSolidity,
+  SiSpringboot,
+  SiTypescript,
+  SiWireshark,
+} from "react-icons/si";
+import { Box1, More2 } from "iconsax-react";
+import { GiFirewall } from "react-icons/gi";
 
 const getGithubSearchUrl = (lang, user = "theanuragshukla") =>
   `https://github.com/search?q=org%3A${user}++language%3A${lang}+&type=repositories`;
@@ -45,44 +91,61 @@ const LEVEL = {
 
 const skills = {
   [TYPES.PLANG]: [
-    { name: "Java", level: LEVEL[3] },
-    { name: "TypeScript", level: LEVEL[3] },
-    { name: "JavaScript", level: LEVEL[3] },
-    { name: "Python", level: LEVEL[2] },
-    { name: "C++", level: LEVEL[2] },
-    { name: "C", level: LEVEL[2] },
-    { name: "Go", level: LEVEL[3] },
-    { name: "Solidity", level: LEVEL[3] },
+    { name: "Java", level: LEVEL[3], Icon: FaJava },
+    { name: "TypeScript", level: LEVEL[3], Icon: SiTypescript },
+    { name: "JavaScript", level: LEVEL[3], Icon: SiJavascript },
+    { name: "Python", level: LEVEL[2], Icon: SiPython },
+    { name: "C++", level: LEVEL[2], Icon: SiCplusplus },
+    { name: "C", level: LEVEL[2], Icon: SiC },
+    { name: "Go", level: LEVEL[3], Icon: SiGo },
+    { name: "Solidity", level: LEVEL[3], Icon: SiSolidity },
+    { name: "Rust", level: LEVEL[0], Icon: SiRust },
   ],
   [TYPES.SLANG]: [
-    { name: "Lua", level: LEVEL[1] },
-    { name: "Bash", level: LEVEL[2] },
-    { name: "PHP", level: LEVEL[1] },
-    { name: "Google Apps Script", level: LEVEL[2] },
+    { name: "Lua", level: LEVEL[1], Icon: SiLua },
+    { name: "MarkDown", level: LEVEL[3], Icon: SiMarkdown },
+    { name: "Bash", level: LEVEL[2], Icon: SiGnubash },
+    { name: "PHP", level: LEVEL[1], Icon: SiPhp },
+    { name: "Google Apps Script", level: LEVEL[2], Icon: SiGoogleappsscript },
   ],
   [TYPES.DBS]: [
-    { name: "PostgreSQL", level: LEVEL[3] },
-    { name: "MongoDB", level: LEVEL[3] },
-    { name: "MySQL", level: LEVEL[3] },
-    { name: "Redis", level: LEVEL[3] },
+    { name: "PostgreSQL", level: LEVEL[3], Icon: SiPostgresql },
+    { name: "MongoDB", level: LEVEL[3], Icon: SiMongodb },
+    { name: "MySQL", level: LEVEL[3], Icon: SiMysql },
+    { name: "Redis", level: LEVEL[3], Icon: SiRedis },
   ],
   [TYPES.FRAMEWORK]: [
-    { name: "NextJS", level: LEVEL[3] },
-    { name: "ExpressJS", level: LEVEL[3] },
-    { name: "React", level: LEVEL[3] },
-    { name: "Spring Boot", level: LEVEL[3] },
-    { name: "Flask", level: LEVEL[2] },
-    { name: "Truffle", level: LEVEL[3] },
-    { name: "Django", level: LEVEL[2] },
+    { name: "React", level: LEVEL[3], Icon: SiReact },
+    { name: "NextJS", level: LEVEL[3], Icon: SiNextdotjs },
+    { name: "NodeJS", level: LEVEL[3], Icon: SiNodedotjs },
+    { name: "NestJS", level: LEVEL[2], Icon: SiNestjs },
+    { name: "ExpressJS", level: LEVEL[3], Icon: SiExpress },
+    { name: "Spring Boot", level: LEVEL[3], Icon: SiSpringboot },
+    { name: "Flask", level: LEVEL[2], Icon: SiFlask },
+    { name: "Truffle", level: LEVEL[3], Icon: SiIpfs },
+    { name: "HardHat", level: LEVEL[3], Icon: FaHardHat },
+    { name: "Django", level: LEVEL[2], Icon: SiDjango },
   ],
   [TYPES.TOOL]: [
-    { name: "Linux", level: LEVEL[3] },
-    { name: "Docker", level: LEVEL[3] },
-    { name: "Git & Github", level: LEVEL[3] },
-    { name: "Nginx", level: LEVEL[2] },
-    { name: "Azure", level: LEVEL[2] },
+    { name: "Linux", level: LEVEL[3], Icon: SiLinux },
+    { name: "Docker", level: LEVEL[3], Icon: SiDocker },
+    { name: "Git & Github", level: LEVEL[3], Icon: SiGit },
+    { name: "Nginx", level: LEVEL[2], Icon: SiNginx },
+    { name: "Azure", level: LEVEL[2], Icon: SiMicrosoftazure },
   ],
-  [TYPES.SEC]: [],
+  [TYPES.SEC]: [
+    { name: "NMap", level: LEVEL[2] },
+    { name: "Metasploit", level: LEVEL[2] },
+    { name: "Firewall", level: LEVEL[3], Icon: GiFirewall },
+    { name: "Wireshark", level: LEVEL[2], Icon: SiWireshark },
+    { name: "Burpsuite", level: LEVEL[2] },
+    { name: "Nikto", level: LEVEL[2] },
+    { name: "BeeF", level: LEVEL[2] },
+    { name: "SQLMap", level: LEVEL[2] },
+    { name: "OWASP ZAP", level: LEVEL[2] },
+    { name: "Dirb", level: LEVEL[2] },
+    { name: "Ngrok", level: LEVEL[3], Icon: SiNgrok },
+  ],
 };
 
 const Icons = {
@@ -94,7 +157,13 @@ const Icons = {
   [TYPES.SEC]: SiKalilinux,
 };
 
-const SkillCard = ({ name, level, projectCount, githubLink }) => {
+const SkillCard = ({
+  name,
+  level,
+  projectCount,
+  githubLink,
+  SkillIcon = More2,
+}) => {
   const getBadgeColor = () => {
     switch (level.toLowerCase()) {
       case "beginner":
@@ -111,9 +180,12 @@ const SkillCard = ({ name, level, projectCount, githubLink }) => {
   return (
     <Box w="100%">
       <Flex align="center" gap={2} justify="space-between">
-        <Heading fontSize="md" fontWeight={400} textTransform="capitalize">
-          {name}{" "}
-        </Heading>
+        <HStack>
+          <SkillIcon size={24} />
+          <Heading fontSize="md" fontWeight={400} textTransform="capitalize">
+            {name}{" "}
+          </Heading>
+        </HStack>
         <Badge borderRadius="full" px="2" colorScheme={getBadgeColor()}>
           {level}
         </Badge>
@@ -240,7 +312,7 @@ export default function Skills() {
         {Object.entries(skills).map(([k, v], i) => {
           if (i !== idx) return "";
           return (
-            <VStack gap={0} w="100%" maxW={500}>
+            <VStack gap={0} w="100%">
               <Heading
                 fontSize={28}
                 mb={4}
@@ -249,18 +321,23 @@ export default function Skills() {
               >
                 {TypeDict[k]}
               </Heading>
-              {v.map(({ name, level }) => (
-                <SkillCard
-                  name={name}
-                  level={level}
-                  projectCount={data[name] || 0}
-                  githubLink={
-                    k.replaceAll("--", "") === TYPES.PLANG
-                      ? getGithubSearchUrl(name)
-                      : null
-                  }
-                />
-              ))}
+              <Grid templateColumns={{ base: "1fr", sm: "1fr 1fr" }} columnGap={8} w="min(100%, 800px)" p={4}>
+                {v.map(({ name, level, Icon }) => (
+                  <GridItem w="100%">
+                  <SkillCard
+                    name={name}
+                    level={level}
+                    SkillIcon={Icon}
+                    projectCount={data[name] || 0}
+                    githubLink={
+                      k.replaceAll("--", "") === TYPES.PLANG
+                        ? getGithubSearchUrl(name)
+                        : null
+                    }
+                  />
+                  </GridItem>
+                ))}
+              </Grid>
             </VStack>
           );
         })}

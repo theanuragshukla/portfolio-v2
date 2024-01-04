@@ -2,24 +2,18 @@ import React, { useEffect, useState } from "react";
 import {
   Box,
   Flex,
-  IconButton,
   Input,
   Textarea,
   Button,
-  Link,
   Stack,
   useToast,
   HStack,
   Heading,
   Checkbox,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
-import {
-  FaGithub,
-  FaLinkedin,
-  FaTwitter,
-  FaEnvelope,
-  FaAlignRight,
-} from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { useFormik } from "formik";
 import messageSchema from "../utils/schemas/messageSchema";
 import { postMsg } from "../data/managers/blog";
@@ -133,18 +127,19 @@ const ContactSection = () => {
           <Heading textAlign="center" fontSize="2xl" fontWeight={400} mb={4}>
             Contact Me
           </Heading>
-          <HStack spacing={4} justify="center" align="center">
-            <Checkbox
-              onChange={handleOfficial}
-              isChecked={official}
-              colorScheme="green"
-              size="lg"
-            />{" "}
-            <Heading fontSize="md" fontWeight={400}>
-              {" "}
-              Contact officially
-            </Heading>
-          </HStack>
+          <FormControl>
+            <HStack spacing={4} justify="center" align="center">
+              <Checkbox
+                onChange={handleOfficial}
+                isChecked={official}
+                colorScheme="green"
+                size="lg"
+              />{" "}
+              <Heading fontSize="md" fontWeight={400}>
+                <FormLabel m={0}> Contact officially</FormLabel>
+              </Heading>
+            </HStack>
+          </FormControl>
           <Input
             name="name"
             placeholder="Name"
@@ -171,7 +166,7 @@ const ContactSection = () => {
             borderRadius="md"
             value={mFormik.values.msg}
             onChange={mFormik.handleChange}
-    ref={messageRef}
+            ref={messageRef}
           />
 
           <Button onClick={mFormik.handleSubmit} colorScheme="green" size="md">

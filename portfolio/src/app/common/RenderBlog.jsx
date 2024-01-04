@@ -1,14 +1,22 @@
 import { chakra } from "@chakra-ui/react";
+
+
 const getStyled = (e) => chakra(e);
 
-const renderBlog = (input) => {
+const renderBlog = (input, styles={}) => {
+  const defaultStyles = {
+    fontSize: 16,
+    fontWeight: "normal",
+    defaultBold: "bold",
+    ...styles,
+  }
   const parts = input.split(/(#b#|#!b#|#f\d+#|;;;|\s+)/);
-  let currentFontSize = 16;
-  let fontWeight = "normal";
+  let currentFontSize = defaultStyles.fontSize;
+  let fontWeight = defaultStyles.fontWeight;
   let styleChanged = false;
   let Elem = getStyled("span");
 
-  const selfClosing = ["img", "hr"]
+  const selfClosing = ["img", "hr"];
   let temp = [];
   const elems = [];
   let attrs = {};
@@ -42,7 +50,7 @@ const renderBlog = (input) => {
     if (part.startsWith("#b")) {
       const wt = part.substring(2, part.length - 1);
       dump(index);
-      fontWeight = !!wt ? wt : "bold";
+      fontWeight = !!wt ? wt : defaultStyles.defaultBold;
       styleChanged = true;
     } else if (part === "#!b#") {
       dump(index);
@@ -51,7 +59,7 @@ const renderBlog = (input) => {
     } else if (part.startsWith("#f")) {
       dump(index);
       const fontSize = parseInt(part.substring(2), 10);
-      currentFontSize = isNaN(fontSize) ? 16 : fontSize;
+      currentFontSize = isNaN(fontSize) ? defaultStyles.fontSize : fontSize;
       styleChanged = true;
     } else if (part.startsWith("#{")) {
       part
@@ -84,4 +92,4 @@ const renderBlog = (input) => {
   return <>{elems.map((e) => e)}</>;
 };
 
-export default renderBlog
+export default renderBlog;
