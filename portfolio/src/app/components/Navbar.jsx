@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import {
   Icon,
@@ -34,7 +34,7 @@ import "../../styles/nav.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../common/Buttons";
 
-export const CustomBar = ({buttons}) => {
+export const CustomBar = ({ buttons }) => {
   return !!buttons ? (
     <>
       <Flex
@@ -50,7 +50,9 @@ export const CustomBar = ({buttons}) => {
         </Flex>
       </Flex>
     </>
-  ) : ""
+  ) : (
+    ""
+  );
 };
 
 export default function Navbar({
@@ -64,7 +66,7 @@ export default function Navbar({
   const [isMd] = useMediaQuery("(max-width: 768px)");
   const ham = useDisclosure();
   const navigate = useNavigate();
-  const controls = [
+  const controls = useMemo(() => [
     {
       title: "About Me",
       onClick: () => {
@@ -106,9 +108,9 @@ export default function Navbar({
       },
       Icon: Book,
     },
-  ];
+  ], [ham, navigate]);
 
-  const blogControls = [
+  const blogControls = useMemo(() => [
     {
       title: "Back",
       onClick: () => {
@@ -137,7 +139,7 @@ export default function Navbar({
           },
         ]
       : []),
-  ];
+  ], [ham, isAdmin, navigate]);
 
   const [buttons, setButtons] = useState([...controls]);
   const location = useLocation();
@@ -148,7 +150,7 @@ export default function Navbar({
       return;
     }
     setButtons(() => [...controls]);
-  }, [location.pathname, isAdmin]);
+  }, [location.pathname, isAdmin, controls, blogControls]);
 
   return !!visible ? (
     <>

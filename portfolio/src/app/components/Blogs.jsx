@@ -34,7 +34,7 @@ export default function Blogs() {
       setLoading(false);
     };
     getBlogs();
-  }, [page]);
+  }, [page, over]);
 
   return (
     <Grid templateRows="1fr auto">

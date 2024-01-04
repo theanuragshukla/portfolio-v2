@@ -14,21 +14,13 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { getRepoCount } from "../data/managers/blog";
 import { CustomBar } from "./Navbar";
+import { FaHardHat, FaJava, FaLinux, FaReact } from "react-icons/fa";
 import {
-  FaDotCircle,
-  FaHardHat,
-  FaJava,
-  FaLinux,
-  FaReact,
-} from "react-icons/fa";
-import {
-  SiAzuredevops,
   SiC,
   SiCplusplus,
   SiDjango,
   SiDocker,
   SiExpress,
-  SiFirewalla,
   SiFlask,
   SiGit,
   SiGnubash,
@@ -59,7 +51,7 @@ import {
   SiTypescript,
   SiWireshark,
 } from "react-icons/si";
-import { Box1, More2 } from "iconsax-react";
+import { More2 } from "iconsax-react";
 import { GiFirewall } from "react-icons/gi";
 
 const getGithubSearchUrl = (lang, user = "theanuragshukla") =>
@@ -229,52 +221,6 @@ export default function Skills() {
     console.log(data);
   }, [data]);
 
-  function chunkArrayInGroups(arr, size) {
-    var myArray = [];
-    for (var i = 0; i < arr.length; i += size) {
-      myArray.push(arr.slice(i, i + size));
-    }
-    return myArray;
-  }
-
-  const GroupCategories = (categories) => {
-    return (
-      <Box>
-        {categories.map(([k, v], i) => {
-          if (v.length === 0) return "";
-          return (
-            <Box px={4}>
-              {!k.startsWith("--") && (
-                <Heading
-                  fontSize={28}
-                  mb={4}
-                  fontWeight={500}
-                  ref={(elem) => (elemRefs[i] = elem)}
-                >
-                  {TypeDict[k]}
-                </Heading>
-              )}
-              <VStack gap={0}>
-                {v.map(({ name, level }) => (
-                  <SkillCard
-                    name={name}
-                    level={level}
-                    projectCount={data[name] || 0}
-                    githubLink={
-                      k.replaceAll("--", "") === TYPES.PLANG
-                        ? getGithubSearchUrl(name)
-                        : null
-                    }
-                  />
-                ))}
-              </VStack>
-              {}
-            </Box>
-          );
-        })}
-      </Box>
-    );
-  };
 
   const handleClick = (i) => {
     setIdx(i);
@@ -294,7 +240,7 @@ export default function Skills() {
       });
     });
     setBtns(obj);
-  }, [TypeDict]);
+  }, []);
 
   return (
     <Grid
@@ -321,20 +267,25 @@ export default function Skills() {
               >
                 {TypeDict[k]}
               </Heading>
-              <Grid templateColumns={{ base: "1fr", sm: "1fr 1fr" }} columnGap={8} w="min(100%, 800px)" p={4}>
+              <Grid
+                templateColumns={{ base: "1fr", sm: "1fr 1fr" }}
+                columnGap={8}
+                w="min(100%, 800px)"
+                p={4}
+              >
                 {v.map(({ name, level, Icon }) => (
                   <GridItem w="100%">
-                  <SkillCard
-                    name={name}
-                    level={level}
-                    SkillIcon={Icon}
-                    projectCount={data[name] || 0}
-                    githubLink={
-                      k.replaceAll("--", "") === TYPES.PLANG
-                        ? getGithubSearchUrl(name)
-                        : null
-                    }
-                  />
+                    <SkillCard
+                      name={name}
+                      level={level}
+                      SkillIcon={Icon}
+                      projectCount={data[name] || 0}
+                      githubLink={
+                        k.replaceAll("--", "") === TYPES.PLANG
+                          ? getGithubSearchUrl(name)
+                          : null
+                      }
+                    />
                   </GridItem>
                 ))}
               </Grid>
