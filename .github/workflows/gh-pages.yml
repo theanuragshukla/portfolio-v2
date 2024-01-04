@@ -19,7 +19,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      
+      - name: move to folder
+        shell: bash
+        run: |
+          cd portfolio
+  
       - name: Installing Node.js
         uses: actions/setup-node@v1
         with:
