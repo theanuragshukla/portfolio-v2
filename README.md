@@ -1,0 +1,1 @@
+[![Build and publish a Docker image](https://github.com/theanuragshukla/portfolio-v2/actions/workflows/docker-build.yml/badge.svg?event=deployment)](https://github.com/theanuragshukla/portfolio-v2/actions/workflows/docker-build.yml)
