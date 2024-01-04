@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text, Badge, Image, Stack } from '@chakra-ui/react';
+import { Box, Text, Badge,  Stack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 const BlogCard = ({ title, desc, tags, img, uid }) => {

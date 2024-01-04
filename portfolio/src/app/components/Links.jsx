@@ -99,7 +99,7 @@ const ContactSection = () => {
         status: "error",
         isClosable: true,
       });
-  }, [mFormik.isValidating]);
+  }, [mFormik.isValidating, mFormik.errors, toast]);
   const [official, setOfficial] = useState(true);
   const messageRef = React.useRef(null);
 

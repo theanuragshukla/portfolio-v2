@@ -11,7 +11,6 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
-import { useState } from "react";
 
 const randomColor = () => {
   const colors = ["blue"];
@@ -160,7 +159,7 @@ const ProjectCard = ({ title, desc, tools, img, url, github }) => {
 };
 
 const Archive = () => {
-  const [archive, setArchive] = useState([]);
+  const archive = []
   return (
     <Box>
       <Heading mx={4} fontSize={32} fontWeight={400} mb={4}>

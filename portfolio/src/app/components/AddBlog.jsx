@@ -207,7 +207,7 @@ const AddBlog = ({ edit }) => {
         isClosable: true,
       });
     post.onClose();
-  }, [mFormik.isValidating]);
+  }, [mFormik.isValidating, mFormik.errors, toast, post]);
 
   useEffect(() => {
     const x = async () => {
@@ -225,7 +225,7 @@ const AddBlog = ({ edit }) => {
       }
     };
     x();
-  }, []);
+  }, [edit, id, navigate])
 
   return (
     <Grid templateRows="auto 1fr">

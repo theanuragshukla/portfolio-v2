@@ -41,7 +41,7 @@ export default function Blog() {
       }
     };
     getBlog();
-  }, []);
+  }, [id, navigate, toast]);
 
   const deletePost = async () => {
     try {
