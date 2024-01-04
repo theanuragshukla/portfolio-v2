@@ -5,7 +5,6 @@ import {
   Heading,
   Link,
   Text,
-  useColorModeValue,
   useMediaQuery,
   VStack,
 } from "@chakra-ui/react";

@@ -12,13 +12,19 @@ import {
   ListItem,
   Text,
   UnorderedList,
-  useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";
 
 import "../../styles/global.scss";
 import NamePlate from "../common/NamePlate";
 import renderBlog from "../common/RenderBlog";
+
+
+  const blogStyles = {
+    fontSize: 16,
+    fontWeight: 500,
+    defaultBold: 700,
+  }
 
 const WorkExperience = ({ experiences }) => {
   return (
@@ -56,13 +62,12 @@ const WorkExperience = ({ experiences }) => {
 };
 
 export default function About() {
-  const fontSize =  useBreakpointValue({ base: 18, md:16 });
   const experiences = [
     {
       name: "The Development Studio",
-      start: "Jan 2021",
+      start: "Jan 2023",
       end: "current",
-      responsibilities: "Full Stack MERN Developer",
+      responsibilities: "MERN Developer",
       achievements: [
         `Built microservices for generating PDF from invoice payload`,
         `Built underlying PaaS for invoiceindia.com`,
@@ -72,14 +77,13 @@ export default function About() {
   ];
 
   const aboutMePara = [
-    `#f${fontSize}# I am a #b# Full Stack Web & mobile Developer #!b# from Gorakhpur, India. I build softwares and solutions which are seamless, creative and efficient. Apart from being a Developer, I am a #b# security Enthusiast #!b# .`,
-    `#f${fontSize}# Currently, I'm focusing on improving my Cybersecurity and Ethical hacking skills. On the learning side, I'm studying different software and security design patterns.`,
-    `#f${fontSize}# In my free time, I play chess and participate in CTFs and coding contests.`,
-    `#f${fontSize}# If you're reading this and have any ideas/projects or a career option, feel free to reach me via contact section or drop a mail at #b# www.anuragshukla@gmail.com #!b#`,
+    `I am a #b# Full Stack Web & mobile Developer #!b# from Gorakhpur, India. I build softwares and solutions which are seamless, creative and efficient. Apart from being a Developer, I am a #b# security Enthusiast #!b# .`,
+    `Currently, I'm focusing on improving my Cybersecurity and Ethical hacking skills. On the learning side, I'm studying different software and security design patterns.`,
+    `In my free time, I play chess and participate in CTFs and coding contests.`,
+    `If you're reading this and have any ideas/projects or a career option, feel free to reach me via contact section or drop a mail at #b# www.anuragshukla@gmail.com #!b#`,
   ];
 
-  const education =
-    `#f${fontSize}# Currently, I'm pursuing my #b# bachelors #!b# in #b# Computer Science & Engineering #!b# from #b# MMMUT, Gorakhpur, India. #!b# ;;; I have completed #b# High School #!b# & #b# Intermediate #!b# from #b# Udaya Public School, Gorakhpur, India #!b# in year 2018 & 2020 respectively.`;
+  const education = `Currently, I'm pursuing my #b# bachelors #!b# in #b# Computer Science & Engineering #!b# from #b# MMMUT, Gorakhpur, India. #!b# ;;; I have completed #b# High School #!b# & #b# Intermediate #!b# from #b# Udaya Public School, Gorakhpur, India #!b# in year 2018 & 2020 respectively.`;
   return (
     <>
       <Hide above="xl">
@@ -105,21 +109,18 @@ export default function About() {
             }}
             pt={4}
             gap={4}
-            px={{base:2, md:0}}
+            px={{ base: 2, md: 0 }}
           >
             <Flex alignItems="center" direction="column" gap={4}>
-              <Avatar size={{ base: "2xl", md: "3xl", xl: "2xl" }} />
+              <Avatar size={{ base: "2xl", md: "3xl", xl: "2xl" }} src="https://picsum.photos/500" />
               <Hide below="xl">
                 <NamePlate align="center" />
               </Hide>
             </Flex>
             <VStack gap={4} pt={4} alignItems="flex-start" mb={12}>
               {aboutMePara.map((str) => (
-                <Text
-                  maxW={{ base: "600px", xl: "800px" }}
-                  lineHeight="150%"
-                >
-                  {renderBlog(str)}
+                <Text maxW={{ base: "600px", xl: "800px" }} lineHeight="150%">
+                  {renderBlog(str, blogStyles)}
                 </Text>
               ))}
 
@@ -132,7 +133,7 @@ export default function About() {
                 fontSize="1.1rem"
                 lineHeight="150%"
               >
-                {renderBlog(education)}
+                {renderBlog(education, blogStyles)}
               </Text>
             </VStack>
           </Flex>
