@@ -4,9 +4,6 @@ services:
       image: theanuragshukla/portfolio-v2
       ports:
         - 3001:80
-      links:
-          - server
-
 
     server:
       container_name: 'portserver'
