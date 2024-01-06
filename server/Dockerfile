@@ -1,23 +1,25 @@
-FROM node:18-alpine
-ARG PORT
+FROM alpine
+
+RUN apk add nodejs npm bash curl
+
+ARG CLIENT_URL
 ARG MONGO_URL
 ARG JWT_SECRET
 ARG ADMIN_SECRET
 
-ENV NODE_ENV production
-ENV PORT $PORT
 ENV MONGO_URL $MONGO_URL
 ENV JWT_SECRET $JWT_SECRET
 ENV ADMIN_SECRET $ADMIN_SECRET
+ENV CLIENT_URL $CLIENT_URL
 
 WORKDIR /app
 
 COPY package*.json .
 
-RUN npm install --production
-
 COPY . .
 
-EXPOSE $PORT
+RUN npm ci
 
-CMD ['node', 'index.js']
+EXPOSE 8000
+
+CMD [ "node" , "index.js" ]

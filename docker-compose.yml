@@ -1,26 +1,23 @@
 version: '3'
 services:
     client:
-      container_name: 'portfolio'
-      environment:
-        REACT_APP_SERVER_URL: https://portserver.anurags.tech
-      build:
-        dockerfile: Dockerfile.prod
-        context: ./portfolio/
+      image: theanuragshukla/portfolio-v2
       ports:
-        - 3001:3000
+        - 3001:80
+      links:
+          - server
 
 
     server:
-      container_name: :'portserver'
-      environment:
-        PORT: ${PORT}
-        JWT_SECRET: ${JWT_SECRET}
-        ADMIN_SECRET: ${ADMIN_SECRET}
-        MONGO_URL: ${MONGO_URL}
+      container_name: 'portserver'
       build:
+        args:
+          JWT_SECRET: ${JWT_SECRET}
+          ADMIN_SECRET: ${ADMIN_SECRET}
+          MONGO_URL: ${MONGO_URL}
+          CLIENT_URL: client
         dockerfile: Dockerfile
         context: ./server/
       ports:
-        - ${PORT}
+        - 5000:8000
       env_file: .env

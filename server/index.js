@@ -1,5 +1,5 @@
 const express = require("express");
-const port = 5000;
+require('dotenv').config()
 const app = express();
 const http = require("http").Server(app);
 const exec = require("child_process").exec;
@@ -9,16 +9,21 @@ const contactRouter = require("./routes/contactRouter");
 const { getToken } = require("./utils/authHelpers");
 const cookieParser = require("cookie-parser");
 
+const port = process.env.PORT || 8000;
+const client_url = process.env.CLIENT_URL || "http://localhost:3000"
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded());
 require("./utils/database.js");
 
 const allowedOrigins = [
-  "http://localhost:3000",
+  client_url,
   "https://theanuragshukla.github.io",
   "https://anurags.tech",
 ];
+
+app.use('/server', (req, res)=>res.json({status:true}))
 
 app.use(
   cors({
