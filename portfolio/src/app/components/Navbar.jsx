@@ -108,7 +108,7 @@ export default function Navbar({
       },
       Icon: Book,
     },
-  ]), []);
+  ]), [ham, navigate]);
 
   const blogControls = useMemo(() => ([
     {
@@ -139,7 +139,7 @@ export default function Navbar({
           },
         ]
       : []),
-  ]), [isAdmin]);
+  ]), [isAdmin, ham, navigate ]);
 
   const [buttons, setButtons] = useState([...controls]);
   const location = useLocation();
