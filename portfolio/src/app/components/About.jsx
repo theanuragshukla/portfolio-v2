@@ -50,8 +50,8 @@ const WorkExperience = ({ experiences }) => {
             Achievements:
           </Text>
           <UnorderedList>
-            {experience.achievements.map((achievement) => (
-              <ListItem>{achievement}</ListItem>
+            {experience.achievements.map((achievement, idx) => (
+              <ListItem key={idx} >{achievement}</ListItem>
             ))}
           </UnorderedList>
           <Divider my={2} />
@@ -66,7 +66,7 @@ export default function About() {
     {
       name: "The Development Studio",
       start: "Jan 2023",
-      end: "current",
+      end: "Jan 2024",
       responsibilities: "MERN Developer",
       achievements: [
         `Built microservices for generating PDF from invoice payload`,
@@ -112,14 +112,14 @@ export default function About() {
             px={{ base: 2, md: 0 }}
           >
             <Flex alignItems="center" direction="column" gap={4}>
-              <Avatar size={{ base: "2xl", md: "3xl", xl: "2xl" }} src="https://picsum.photos/500" />
+              <Avatar size={{ base: "2xl", md: "3xl", xl: "2xl" }} maxW="md" src="https://theanuragshukla.github.io/portfolio/static/media/myPhoto.610cd4307b0c9940c491.webp" />
               <Hide below="xl">
                 <NamePlate align="center" />
               </Hide>
             </Flex>
             <VStack gap={4} pt={4} alignItems="flex-start" mb={12}>
-              {aboutMePara.map((str) => (
-                <Text maxW={{ base: "600px", xl: "800px" }} lineHeight="150%">
+              {aboutMePara.map((str, idx) => (
+                <Text maxW={{ base: "600px", xl: "800px" }} key={idx} lineHeight="150%">
                   {renderBlog(str, blogStyles)}
                 </Text>
               ))}

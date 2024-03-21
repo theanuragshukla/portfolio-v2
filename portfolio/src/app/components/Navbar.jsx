@@ -66,7 +66,7 @@ export default function Navbar({
   const [isMd] = useMediaQuery("(max-width: 768px)");
   const ham = useDisclosure();
   const navigate = useNavigate();
-  const controls = useMemo(() => [
+  const controls = useMemo(() => ([
     {
       title: "About Me",
       onClick: () => {
@@ -108,9 +108,9 @@ export default function Navbar({
       },
       Icon: Book,
     },
-  ], [ham, navigate]);
+  ]), []);
 
-  const blogControls = useMemo(() => [
+  const blogControls = useMemo(() => ([
     {
       title: "Back",
       onClick: () => {
@@ -139,7 +139,7 @@ export default function Navbar({
           },
         ]
       : []),
-  ], [ham, isAdmin, navigate]);
+  ]), [isAdmin]);
 
   const [buttons, setButtons] = useState([...controls]);
   const location = useLocation();

@@ -28,7 +28,6 @@ const getToken = (req, res) => {
     if (new String(password).valueOf() === new String(process.env.ADMIN_SECRET).valueOf()) {
       const token = jwt.sign({ status: true }, secret, {
         expiresIn: "1d",
-
       });
       res.cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,

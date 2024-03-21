@@ -1,5 +1,5 @@
 const express = require("express");
-require('dotenv').config()
+require("dotenv").config();
 const app = express();
 const http = require("http").Server(app);
 const exec = require("child_process").exec;
@@ -10,7 +10,7 @@ const { getToken } = require("./utils/authHelpers");
 const cookieParser = require("cookie-parser");
 
 const port = process.env.PORT || 8000;
-const client_url = process.env.CLIENT_URL || "http://localhost:3000"
+const client_url = process.env.CLIENT_URL || "http://localhost:3000";
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,7 +23,7 @@ const allowedOrigins = [
   "https://anurags.tech",
 ];
 
-app.use('/server', (req, res)=>res.json({status:true}))
+app.use("/server", (req, res) => res.json({ status: true }));
 
 app.use(
   cors({
