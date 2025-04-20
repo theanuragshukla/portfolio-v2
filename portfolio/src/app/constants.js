@@ -45,6 +45,7 @@ export const EXTRAS_URLS = {
   ABOUT: `${EXTRAS_BASE_URL}/about.json`,
   EDUCATION: `${EXTRAS_BASE_URL}/education.json`,
   EXPERIENCE: `${EXTRAS_BASE_URL}/experiences.json`,
+  RESUME: `${EXTRAS_BASE_URL}/resume.pdf`,
 }
 
 export const TYPES = {

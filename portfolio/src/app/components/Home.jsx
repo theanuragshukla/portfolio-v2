@@ -11,7 +11,9 @@ import {
 
 import "../../styles/global.scss";
 import Navbar from "./Navbar";
-import { useOutletContext } from "react-router-dom";
+import { Navigate, useOutletContext } from "react-router-dom";
+import { IoDocumentText } from "react-icons/io5";
+import { EXTRAS_URLS } from "../constants";
 
 const RespHeading = ({ children }) => {
   return (
@@ -64,7 +66,13 @@ export default function Home() {
             system performance and a flawless user experience.
           </RespHeading>
 
-          <Navbar noLogo colorModeSwitch={false} visible={!isSm} />
+          <Navbar noLogo extraButtons={[
+            {
+              title: "Resume",
+              onClick:()=>{window.open(EXTRAS_URLS.RESUME, "_blank")},
+              Icon: IoDocumentText,
+            }
+          ]} colorModeSwitch={false} visible={!isSm} />
           <Flex fontSize={{ base: 16, md: 24 }} mt={6} wrap="wrap">
             <Text>Get in touch 👉</Text>
             <Text

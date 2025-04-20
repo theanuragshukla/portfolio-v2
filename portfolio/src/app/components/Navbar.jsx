@@ -61,6 +61,7 @@ export default function Navbar({
   colorModeSwitch = true,
   allButtons = true,
   visible = true,
+  extraButtons = [],
 }) {
   const { colorMode, toggleColorMode } = useColorMode();
   const [isMd] = useMediaQuery("(max-width: 768px)");
@@ -111,6 +112,7 @@ export default function Navbar({
       },
       Icon: Book,
     },
+    ...extraButtons
   ];
 
   const blogControls = [
