@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-
+import React from "react";
 import {
   Icon,
   Button,
@@ -33,6 +32,7 @@ import { GiBrain } from "react-icons/gi";
 import "../../styles/nav.scss";
 import { useLocation, useNavigate } from "react-router-dom";
 import Buttons from "../common/Buttons";
+import { SearchPopup } from "./SearchPopup";
 
 export const CustomBar = ({ buttons }) => {
   return !!buttons ? (
@@ -65,8 +65,12 @@ export default function Navbar({
   const { colorMode, toggleColorMode } = useColorMode();
   const [isMd] = useMediaQuery("(max-width: 768px)");
   const ham = useDisclosure();
+  const {isOpen:isSearchOpen, onToggle: onSearchToggle, onClose:onSearchClose} = useDisclosure();
   const navigate = useNavigate();
-  const controls = useMemo(() => ([
+  const location = useLocation();
+  
+  // Define controls directly when rendering instead of using state
+  const controls = [
     {
       title: "About Me",
       onClick: () => {
@@ -99,7 +103,6 @@ export default function Navbar({
       },
       Icon: Link1,
     },
-
     {
       title: "Blog",
       onClick: () => {
@@ -108,9 +111,9 @@ export default function Navbar({
       },
       Icon: Book,
     },
-  ]), [ham, navigate]);
+  ];
 
-  const blogControls = useMemo(() => ([
+  const blogControls = [
     {
       title: "Back",
       onClick: () => {
@@ -119,10 +122,10 @@ export default function Navbar({
       },
       Icon: ArrowCircleLeft,
     },
-
     {
       title: "Search",
       onClick: () => {
+        onSearchToggle()
         ham.onClose();
       },
       Icon: SearchNormal,
@@ -139,18 +142,10 @@ export default function Navbar({
           },
         ]
       : []),
-  ]), [isAdmin, ham, navigate ]);
+  ];
 
-  const [buttons, setButtons] = useState([...controls]);
-  const location = useLocation();
-
-  useEffect(() => {
-    if (location.pathname.startsWith("/blog")) {
-      setButtons(() => [...blogControls]);
-      return;
-    }
-    setButtons(() => [...controls]);
-  }, [location.pathname, isAdmin, controls, blogControls]);
+  // Choose which buttons to display based on the current path
+  const buttons = location.pathname.startsWith("/blog") ? blogControls : controls;
 
   return !!visible ? (
     <>
@@ -250,6 +245,10 @@ export default function Navbar({
           </AnimatePresence>
         </Show>
       </Flex>
+      <SearchPopup 
+        isOpen={isSearchOpen} 
+        onClose={onSearchClose} 
+      />
     </>
   ) : (
     <></>

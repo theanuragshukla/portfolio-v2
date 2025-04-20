@@ -13,8 +13,8 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
-import { ARCHIVE_JSON_URL, PROJECT_JSON_URL } from "../constants";
+import { useEffect, useState } from "react";
+import { EXTRAS_URLS} from "../constants";
 
 const randomColor = () => {
   const colors = ["blue"];
@@ -22,98 +22,137 @@ const randomColor = () => {
 };
 
 const ProjectCard = ({ title, desc, tools, img, links, ...extras }) => {
+  const borderColor = useColorModeValue("gray.200", "gray.600");
   const hoverBg = useColorModeValue("gray.100", "gray.700");
+  
   return (
-    <Grid
-      maxW="800px"
+    <Flex
+      direction="column"
       w="100%"
+      h="100%"
       borderRadius="md"
       p={4}
+      border="1px solid"
+      borderColor={borderColor}
       _hover={{
         bg: hoverBg,
       }}
-    {...extras}
+      {...extras}
     >
-      <Flex align="center" gap={2}>
-        <Text fontSize="3xl" fontWeight={200} noOfLines={2}>
+      <Flex align="center" gap={2} mb={2}>
+        <Text fontSize="2xl" fontWeight={200} noOfLines={2}>
           {title}
         </Text>
       </Flex>
+      
+      <Text lineHeight="150%" flex="1">
+        {desc}
+      </Text>
+      
+      <Box mt={3}>
+        <HStack spacing={4} wrap="wrap" mb={2}>
+          {links.map((link) => (
+            <Button
+              key={link.name}
+              colorScheme="blue"
+              variant="link"
+              size="md"
+              pl={0}
+              as={Link}
+              target="_blank"
+              href={link.url}
+              fontWeight={1000}
+            >
+              {link.name}
+            </Button>
+          ))}
+        </HStack>
+        
+        <HStack spacing={2} wrap="wrap">
+          {tools.map((tool, index) => (
+            <Badge
+              key={index}
+              borderRadius="md"
+              px="2"
+              py={1}
+              variant="outline"
+              colorScheme={randomColor()}
+            >
+              {tool}
+            </Badge>
+          ))}
+        </HStack>
+      </Box>
+    </Flex>
+  );
+};
 
-      <Text lineHeight="150%">{desc}</Text>
+const ProjectsGrid = ({ items, columns = { base: 1, sm: 2, md: 3, xl: 1 } }) => {
+  // Convert columns object to grid template columns string
+  const getTemplateColumns = () => {
+    const result = {};
+    
+    Object.entries(columns).forEach(([breakpoint, count]) => {
+      if (count === 1) {
+        result[breakpoint] = "1fr";
+      } else {
+        result[breakpoint] = `repeat(${count}, 1fr)`;
+      }
+    });
+    
+    return result;
+  };
 
-      <HStack spacing={4} wrap="wrap" my={2}>
-        {links.map((link) => (
-          <Button
-            key={link.name}
-            colorScheme="blue"
-            variant="link"
-            size="md"
-            pl={0}
-            as={Link}
-            target="_blank"
-            href={link.url}
-            fontWeight={1000}
-          >
-            {link.name}
-          </Button>
-        ))}
-      </HStack>
-
-      <HStack spacing={2} wrap="wrap">
-        {tools.map((tool, index) => (
-          <Badge
-            key={index}
-            borderRadius="md"
-            px="2"
-            py={1}
-            variant="outline"
-            colorScheme={randomColor()}
-          >
-            {tool}
-          </Badge>
-        ))}
-      </HStack>
-      <Divider mt={4} />
+  return (
+    <Grid 
+      templateColumns={getTemplateColumns()}
+      gap={4}
+    >
+      {items.map((obj, idx) => (
+        <GridItem key={idx} height="100%">
+          <ProjectCard {...obj} />
+        </GridItem>
+      ))}
     </Grid>
   );
 };
 
-const Archive = ({ archive = [], loading = true }) => {
+const SectionContainer = ({ title, children, isLoading }) => {
   return (
-    <Box>
-      <Heading mx={4} fontSize={32} fontWeight={400} mb={4} textDecor="underline" textUnderlineOffset={4} textDecorationThickness={2}>
-        Archive
+    <Box w="100%" px={2}>
+      <Heading 
+        fontSize={32} 
+        fontWeight={400} 
+        mb={4} 
+        textDecor="underline" 
+        textUnderlineOffset={4} 
+        textDecorationThickness={2}
+      >
+        {title}
       </Heading>
-    <Grid templateColumns="repeat(auto-fill, minmax(350px, 1fr))" gap={4}>
-    {loading ? (
-      <Progress isIndeterminate h="2px" />
-    ) : !!archive && archive.length > 0 ? (
-      archive.map((obj, idx) => <ProjectCard key={idx} {...obj} />)
-    ) : (
-      <Text fontSize="lg" fontWeight={400} mx={4}>
-        Nothing to show here
-      </Text>
-    )}
-    </Grid>
+      {isLoading ? (
+        <Progress isIndeterminate h="2px" />
+      ) : (
+        children
+      )}
     </Box>
   );
 };
 
 export default function Projects() {
-  const [scrollHeight, setScrollHeight] = useState("90vh");
   const [projects, setProjects] = useState([]);
   const [archive, setArchive] = useState([]);
   const [loading, setLoading] = useState({ projects: true, archive: true });
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   useEffect(() => {
-    fetch(PROJECT_JSON_URL)
+    fetch(EXTRAS_URLS.PROJECTS)
       .then((res) => res.json())
       .then((data) => {
         setProjects(data);
         setLoading((prev) => ({ ...prev, projects: false }));
       });
-    fetch(ARCHIVE_JSON_URL)
+    fetch(EXTRAS_URLS.ARCHIVE)
       .then((res) => res.json())
       .then((data) => {
         setArchive(data);
@@ -121,33 +160,65 @@ export default function Projects() {
       });
   }, []);
 
-  const projectsRef = useRef(null);
-  useEffect(() => {
-    if (projectsRef.current !== null)
-      setScrollHeight(projectsRef.current.clientHeight);
-  }, [projectsRef, projects]);
-
   return (
-    <Grid templateColumns={{ base: "1fr", xl: "1fr auto 400px " }} gap={4}>
-      <GridItem ref={projectsRef}>
-        {loading.projects ? (
-          <Progress isIndeterminate h="2px" />
-        ) : !!projects && projects.length > 0 ? (
-          projects.map((obj, idx) => <ProjectCard key={idx} {...obj} />)
-        ) : (
-          <Text fontSize="lg" fontWeight={400} mx={4}>
-            Nothing to show here
-          </Text>
-        )}
-      </GridItem>
+    <Flex 
+      direction={{ base: "column", xl: "row" }} 
+      gap={6} 
+      w="100%"
+    >
+      {/* Projects Section */}
+      <Box 
+        flex={{ base: "1", xl: "1" }}
+        h={{ xl: "calc(100vh - 100px)" }}
+        overflowY={{ xl: "auto" }}
+      >
+        <SectionContainer title="Projects" isLoading={loading.projects}>
+          {!!projects && projects.length > 0 ? (
+            <ProjectsGrid 
+              items={projects} 
+              columns={{ base: 1, sm: 2, md: 3, xl: 1 }}
+            />
+          ) : (
+            <Text fontSize="lg" fontWeight={400}>
+              Nothing to show here
+            </Text>
+          )}
+        </SectionContainer>
+      </Box>
+
+      {/* Divider */}
       <Divider
-        width={{ base: "100%", xl: "1px" }}
-        h={{ base: "1px", xl: "100%" }}
-        borderLeft="1px solid "
+        display={{ base: "block", xl: "none" }}
+        orientation="horizontal"
+        borderColor={borderColor}
+        my={2}
       />
-      <GridItem maxH={scrollHeight} overflowY="scroll">
-        <Archive archive={archive} loading={loading.archive} />
-      </GridItem>
-    </Grid>
+      <Divider
+        display={{ base: "none", xl: "block" }}
+        orientation="vertical"
+        borderColor={borderColor}
+        h="100%"
+      />
+
+      {/* Archive Section */}
+      <Box 
+        flex={{ base: "1", xl: "0 0 400px" }}
+        h={{ xl: "calc(100vh - 100px)" }}
+        overflowY={{ xl: "auto" }}
+      >
+        <SectionContainer title="Archive" isLoading={loading.archive}>
+          {!!archive && archive.length > 0 ? (
+            <ProjectsGrid 
+              items={archive}
+              columns={{ base: 1, sm: 2, md: 2, xl: 1 }}
+            />
+          ) : (
+            <Text fontSize="lg" fontWeight={400}>
+              Nothing to show here
+            </Text>
+          )}
+        </SectionContainer>
+      </Box>
+    </Flex>
   );
 }

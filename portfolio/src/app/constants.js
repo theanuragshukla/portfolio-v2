@@ -37,10 +37,15 @@ import {
 } from "react-icons/si";
 import { GiFirewall } from "react-icons/gi";
 
-export const PROJECT_JSON_URL =
-  "https://raw.githubusercontent.com/theanuragshukla/extras/main/portfolio-v2/projects.json";
-export const ARCHIVE_JSON_URL =
-  "https://raw.githubusercontent.com/theanuragshukla/extras/main/portfolio-v2/archive.json";
+export const EXTRAS_BASE_URL = "https://raw.githubusercontent.com/theanuragshukla/extras/main/portfolio-v2";
+
+export const EXTRAS_URLS = {
+  PROJECTS: `${EXTRAS_BASE_URL}/projects.json`,
+  ARCHIVE: `${EXTRAS_BASE_URL}/archive.json`,
+  ABOUT: `${EXTRAS_BASE_URL}/about.json`,
+  EDUCATION: `${EXTRAS_BASE_URL}/education.json`,
+  EXPERIENCE: `${EXTRAS_BASE_URL}/experiences.json`,
+}
 
 export const TYPES = {
   PLANG: "Programming language",

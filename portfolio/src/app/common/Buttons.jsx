@@ -8,14 +8,15 @@ const Buttons = ({ buttons }) => {
   const audio = useMemo(() => new Audio(hoverSound), []);
   audio.muted = true;
   const handleHover = () => {
-    try {
+    /* try {
       audio.currentTime = 0;
       audio.playbackRate = 2;
       audio.play();
     } catch (e) {
     } finally {
       audio.muted = false;
-    }
+    } */
+
   };
 
   return (

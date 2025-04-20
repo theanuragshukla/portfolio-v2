@@ -8,15 +8,11 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import {
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import renderBlog from "../common/RenderBlog";
 import { deleteOneBlog, getOneBlog } from "../data/managers/blog";
 import { MdDelete } from "react-icons/md";
-import {  Edit } from "iconsax-react";
+import { Edit } from "iconsax-react";
 import { ConfirmDialog } from "./AddBlog";
 
 export default function Blog() {
@@ -83,7 +79,12 @@ export default function Blog() {
   ];
 
   return (
-    <Box>
+    <Box
+      px={{
+        base: 4,
+        md: 8,
+      }}
+    >
       <ConfirmDialog
         desc="Are you sure you want to delete ?"
         title="Delete ?"
@@ -93,7 +94,9 @@ export default function Blog() {
       />
 
       {!!blog && !!blog.body ? (
-        renderBlog(blog.body)
+        <Box maxW={"3xl"} mx="auto">
+          {renderBlog(blog.body)}
+        </Box>
       ) : (
         <Progress isIndeterminate h={1} />
       )}

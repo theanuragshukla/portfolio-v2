@@ -67,8 +67,8 @@ const EditorWindow = ({ formik }) => {
         name="body"
         border="none"
         w="100%"
-    height="100%"
-    resize="vertical"
+        height="100%"
+        resize="vertical"
         placeholder="Start Writing..."
         fontSize={18}
         onChange={formik.handleChange}
@@ -98,6 +98,7 @@ const AddBlog = ({ edit }) => {
   });
 
   const clearBlog = () => {
+    mFormik.setFieldValue("body", "");
     setBlog("");
     clear.onClose();
   };
@@ -109,7 +110,13 @@ const AddBlog = ({ edit }) => {
 
   const restoreBuffer = () => {
     const buffer = localStorage.getItem("blog-buffer");
-    if (!!buffer) setInitialValues((o) => ({ ...o, ...JSON.parse(buffer) }));
+    if (!!buffer){
+      setInitialValues((o) => ({ ...o, ...JSON.parse(buffer) }));
+      mFormik.setValues({
+        ...mFormik.values,
+        ...JSON.parse(buffer)
+      })
+    }
     restore.onClose();
   };
 
@@ -121,13 +128,13 @@ const AddBlog = ({ edit }) => {
         ? updateBlog(id, toPost)
         : publishBlog(toPost));
       if (status) {
-        sessionStorage.clear()
+        sessionStorage.clear();
         toast({
           title: "Published successfully",
           status: "success",
           isClosable: true,
         });
-        navigate(edit ? `/blog/${id}` :"/blog");
+        navigate(edit ? `/blog/${id}` : "/blog");
       } else {
         throw new Error(msg);
       }
@@ -198,7 +205,7 @@ const AddBlog = ({ edit }) => {
   useEffect(() => {
     if (mFormik.errors.length === 0 || mFormik.isValidating) return;
     const err = getOneError(mFormik.errors);
-    if (!!err)
+    if (!!err){
       toast({
         title: "Validation error",
         description: err,
@@ -206,7 +213,7 @@ const AddBlog = ({ edit }) => {
         status: "error",
         isClosable: true,
       });
-    post.onClose();
+    }
   }, [mFormik.isValidating, mFormik.errors, toast, post]);
 
   useEffect(() => {
@@ -215,7 +222,11 @@ const AddBlog = ({ edit }) => {
         if (!!id) {
           const { status, data } = await getOneBlog(id);
           if (status) {
-            setInitialValues((o) => ({ ...o, ...data, tags:data.tags.join() }));
+            setInitialValues((o) => ({
+              ...o,
+              ...data,
+              tags: data.tags.join(),
+            }));
           } else {
             navigate("/blog");
           }
@@ -225,7 +236,7 @@ const AddBlog = ({ edit }) => {
       }
     };
     x();
-  }, [edit, id, navigate])
+  }, [edit, id, navigate]);
 
   return (
     <Grid templateRows="auto 1fr">

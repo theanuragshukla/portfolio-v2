@@ -36,6 +36,16 @@ export const getOneBlog = (id) => {
   return reqModal(() => client.get(`/blog/${id}`));
 };
 
+export const searchBlog = (query) => {
+  return reqModal(() =>
+    client.get("/blog/search", {
+      params: {
+        q: query,
+      },
+    })
+  );
+};
+
 export const publishBlog = (body) => {
   return reqModal(() => client.post("/blog", body));
 };
@@ -45,11 +55,11 @@ export const updateBlog = (id, body) => {
 };
 export const getAuthorized = (body) => {
   return reqModal(() => client.post(`/getToken`, body));
-}
+};
 
 export const postMsg = (body) => {
   return reqModal(() => client.post(`/contact`, body));
-}
+};
 
 export const getRepoCount = (lang) => {
   return reqModal(() => client.get(`/lang-in-repo/${lang}`));
