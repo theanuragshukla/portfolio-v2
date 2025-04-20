@@ -17,6 +17,7 @@ router.post('/', validateBody(messageSchema),  async (req, res)=>{
     await message.save();
     res.json({ status: true, msg: "Thank you for reaching out!" });
   } catch (e) {
+    console.error(e);
     res.json({ status: false, msg: e.message || "Unexpected server error" });
   }
 })

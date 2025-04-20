@@ -44,7 +44,9 @@ const blogSchema = new mongoose.Schema({
       message: "Maximum 5 tags allowed",
     },
   },
-});
+}, {
+    timestamps: true
+  });
 
 const Blog = mongoose.model("Blog", blogSchema);
 

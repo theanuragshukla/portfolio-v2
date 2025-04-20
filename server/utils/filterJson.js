@@ -1,8 +1,7 @@
-const filterJSON = (arrOfObj) => {
+const filterJSON = (arrOfObj, keys=[]) => {
   return arrOfObj.map((obj) => {
-    obj = obj.toObject()
     for (let key in obj) {
-      if (key.startsWith("_")) {
+      if (key.startsWith("_") || keys.includes(key)) {
         delete obj[key];
       }
     }

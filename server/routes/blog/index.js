@@ -1,22 +1,30 @@
-const express = require("express")
+const express = require("express");
 const Blog = require("../../models/Blog");
 const blogSchema = require("../../utils/validation/blogSchema");
 const router = express.Router();
 const validateBody = require("../../middlewares/validation");
 const { generateUid, resolveToken } = require("../../utils/authHelpers");
 const { filterJSON } = require("../../utils/filterJson");
+const {filterBlogs} = require("../../helpers/blog");
 
 router.get("/", async (req, res) => {
   try {
     let { page = 1 } = req.query;
     page = Math.max(1, page);
-    const size = 20;
-    const blogs = await Blog.find()
-      .skip(size * (page - 1))
-      .limit(size);
-    res.json({ status: true, data: filterJSON(blogs) });
+    const {data, status, hasNext} = await filterBlogs({page});
+    return res.json({ status, data, hasNext });
   } catch (e) {
     res.json({ status: false, msg: e.message || "Unexpected server error" });
+  }
+});
+
+router.get("/search", async (req, res) => {
+  const { q:query, page = 1 } = req.query;
+  const { status, data, hasNext } = await filterBlogs({ query, page });
+  if (status) {
+    res.json({ status: true, data, hasNext });
+  } else {
+    res.json({ status: false, msg: data.msg || "Unexpected server error" });
   }
 });
 
@@ -24,9 +32,9 @@ router.get("/:uid", async (req, res) => {
   try {
     let { uid } = req.params;
     if (!!uid) {
-      const blog = await Blog.findOne({ uid });
+      const blog = await Blog.findOne({ uid }).select("-_id -__v -uid -createdAt");
       if (!!blog) {
-        res.json({ status: true, data: filterJSON([blog])[0] });
+        res.json({ status: true, data: blog });
       } else {
         res.status(404).json({ status: false, msg: "Invalid blogId" });
       }
